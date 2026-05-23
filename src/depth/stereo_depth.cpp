@@ -20,7 +20,7 @@
 
 namespace {
 std::string resolve_engine_cache_dir() {
-  if (const char *repo = std::getenv("DISCKCHUNGS_REPO")) {
+  if (const char *repo = std::getenv("DISKCHUNGS_REPO")) {
     return std::string(repo) + "/models/";
   }
   return "/workspace/repo/models/";

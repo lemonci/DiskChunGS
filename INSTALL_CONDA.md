@@ -51,7 +51,7 @@ hooks expect: it sets `CUDA_HOME`, `Torch_DIR`, `OpenCV_DIR`, `TENSORRT_ROOT`,
 and `LD_LIBRARY_PATH` (including `$CONDA_PREFIX/lib` so the binaries find
 the env's CUDA / NPP / openblas at runtime) so the build and the resulting
 binaries pick up the in-repo third-party trees. It hardcodes the repo
-location — adjust `DISCKCHUNGS_REPO=...` at the top if you cloned elsewhere.
+location — adjust `DISKCHUNGS_REPO=...` at the top if you cloned elsewhere.
 
 ## 3. Download libtorch
 
