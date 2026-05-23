@@ -13,9 +13,19 @@
 
 #include "depth/stereo_depth.h"
 
+#include <cstdlib>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
+
+namespace {
+std::string resolve_engine_cache_dir() {
+  if (const char *repo = std::getenv("DISCKCHUNGS_REPO")) {
+    return std::string(repo) + "/models/";
+  }
+  return "/workspace/repo/models/";
+}
+}  // namespace
 
 // StereoDepth implementation
 StereoDepth::StereoDepth(const std::string& model_path)
@@ -55,7 +65,7 @@ void StereoDepth::initialize_model(const std::string& model_path) {
   if (pos != std::string::npos) {
     base_filename = base_filename.substr(0, pos);
   }
-  engine_cache_path_ = std::string(DEFAULT_ENGINE_CACHE_DIR) + base_filename + ".engine";
+  engine_cache_path_ = resolve_engine_cache_dir() + base_filename + ".engine";
 
   try {
     // Try to load cached engine first

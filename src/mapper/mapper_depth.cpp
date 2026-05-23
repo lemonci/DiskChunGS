@@ -15,6 +15,7 @@
 
 #include <torch/torch.h>
 
+#include <cstdlib>
 #include <filesystem>
 #include <iostream>
 
@@ -22,6 +23,15 @@
 #include "gaussian_splatting/depth/depth_alignment.h"
 #include "geometry/operate_points.h"
 #include "utils/tensor_utils.h"
+
+namespace {
+std::string resolve_depth_model_dir() {
+  if (const char *repo = std::getenv("DISCKCHUNGS_REPO")) {
+    return std::string(repo) + "/models/";
+  }
+  return "/workspace/repo/models/";
+}
+}  // namespace
 
 torch::Tensor GaussianMapper::computeLoGProbability(
     const torch::Tensor& image) {
@@ -36,7 +46,7 @@ void GaussianMapper::initializeLaplacianOfGaussianKernel() {
 void GaussianMapper::initializeStereoDepthEstimator() {
   // Construct model path for configured resolution
   std::string onnx_path =
-      std::string(DEPTH_MODEL_BASE_DIR) +
+      resolve_depth_model_dir() +
       "fast_acvnet_plus_kitti_2015_opset16_" +
       std::to_string(STEREO_MODEL_HEIGHT) + "x" +
       std::to_string(STEREO_MODEL_WIDTH) + ".onnx";
@@ -46,7 +56,7 @@ void GaussianMapper::initializeStereoDepthEstimator() {
 
 void GaussianMapper::initializeMonocularDepthEstimator() {
   std::string onnx_path =
-      std::string(DEPTH_MODEL_BASE_DIR) + "depth_anything_v2_vitl.onnx";
+      resolve_depth_model_dir() + "depth_anything_v2_vitl.onnx";
 
   this->monocular_depth_estimator_ = std::make_shared<MonoDepth>(onnx_path);
 }
