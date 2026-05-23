@@ -41,8 +41,15 @@ if(IS_ARM)
     find_package(Torch REQUIRED)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
 else()
-    # Updated path to libtorch in the base Docker image
-    set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "/workspace/third_party/libtorch")
+    # Allow override via -DTorch_DIR / CMAKE_PREFIX_PATH (host/conda).
+    # Fall back to in-repo libtorch, then Docker-image path.
+    if(NOT Torch_DIR AND NOT CMAKE_PREFIX_PATH MATCHES "libtorch")
+        if(EXISTS "${CMAKE_SOURCE_DIR}/third_party/libtorch")
+            set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "${CMAKE_SOURCE_DIR}/third_party/libtorch")
+        else()
+            set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "/workspace/third_party/libtorch")
+        endif()
+    endif()
     find_package(Torch REQUIRED)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS} -pthread")
 endif()
@@ -50,8 +57,15 @@ endif()
 find_package(CUDA REQUIRED)
 find_package(Eigen3 REQUIRED)
 
-# Updated path to OpenCV - using the pre-built version in the base image
-set(OpenCV_DIR "/workspace/third_party/install/opencv/lib/cmake/opencv4")
+# Allow override via -DOpenCV_DIR (host/conda).
+# Fall back to in-repo install, then Docker-image path.
+if(NOT OpenCV_DIR)
+    if(EXISTS "${CMAKE_SOURCE_DIR}/third_party/install/opencv/lib/cmake/opencv4")
+        set(OpenCV_DIR "${CMAKE_SOURCE_DIR}/third_party/install/opencv/lib/cmake/opencv4")
+    else()
+        set(OpenCV_DIR "/workspace/third_party/install/opencv/lib/cmake/opencv4")
+    endif()
+endif()
 find_package(OpenCV 4 REQUIRED)
 
 find_package(jsoncpp REQUIRED)
@@ -74,6 +88,10 @@ find_library(TENSORRT_LIBRARY_INFER nvinfer
 if(TENSORRT_INCLUDE_DIR AND TENSORRT_LIBRARY_INFER)
     set(TENSORRT_FOUND TRUE)
     set(TENSORRT_DIR ${TENSORRT_INCLUDE_DIR}/..)
+    # TENSORRT_LIBS below is bare names (nvinfer, etc.); make sure the linker
+    # can find them when TensorRT is installed outside the system paths.
+    get_filename_component(_tensorrt_lib_dir "${TENSORRT_LIBRARY_INFER}" DIRECTORY)
+    link_directories(${_tensorrt_lib_dir})
 endif()
 
 if(NOT TENSORRT_FOUND)

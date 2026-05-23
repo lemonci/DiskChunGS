@@ -50,3 +50,10 @@ debug/
 
 models/depth_anything_v2_vitl.onnx
 *.engine
+
+# Host-conda build artifacts and downloaded third-party trees
+/third_party/install/
+/third_party/libtorch/
+/third_party/opencv/
+/third_party/opencv_contrib/
+/third_party/tensorrt/

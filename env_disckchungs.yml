@@ -1,0 +1,58 @@
+name: disckchungs
+channels:
+  - nvidia/label/cuda-11.8.0
+  - conda-forge
+dependencies:
+  - python=3.10
+  # CUDA 11.8 toolchain (matches Dockerfile.base nvidia/cuda:11.8.0)
+  - nvidia/label/cuda-11.8.0::cuda-toolkit=11.8.0
+  # cuDNN 8 (matches cuda:11.8.0-cudnn8 base image)
+  - conda-forge::cudnn=8.9.*
+  # C/C++ toolchain (Dockerfile uses gcc-11 / g++-11)
+  - conda-forge::gcc_linux-64=11.*
+  - conda-forge::gxx_linux-64=11.*
+  - conda-forge::gfortran_linux-64=11.*
+  - conda-forge::sysroot_linux-64=2.17
+  - conda-forge::binutils_linux-64
+  # Build tooling
+  - conda-forge::cmake>=3.22,<4
+  - conda-forge::ninja
+  - conda-forge::make
+  - conda-forge::pkg-config
+  - conda-forge::git
+  - conda-forge::wget
+  - conda-forge::unzip
+  # System libs (parity with apt deps in Dockerfile.base)
+  - conda-forge::eigen=3.4.*
+  - conda-forge::libboost-devel
+  - conda-forge::jsoncpp
+  - conda-forge::glm
+  - conda-forge::glfw
+  - conda-forge::libglu
+  - conda-forge::libgl-devel
+  - conda-forge::libegl-devel
+  - conda-forge::libopengl-devel
+  - conda-forge::ffmpeg
+  - conda-forge::libjpeg-turbo
+  - conda-forge::libpng
+  - conda-forge::libtiff
+  - conda-forge::openblas
+  - conda-forge::openssl
+  - conda-forge::zlib
+  - conda-forge::tk
+  # Python build deps
+  - conda-forge::numpy
+  - conda-forge::setuptools
+  - conda-forge::wheel
+  - conda-forge::pip
+  - pip:
+      - --extra-index-url https://download.pytorch.org/whl/cu121
+      - torch==2.3.1+cu121
+      - torchvision==0.18.1+cu121
+      - torchmetrics==1.5.2
+      - evo
+      - optuna
+      - optuna-dashboard
+      - networkx==2.8.8
+      - opencv-python==4.10.0.84
+      - pynput
