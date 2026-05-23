@@ -7,7 +7,7 @@ distributions newer than Ubuntu 20.04 (tested on Ubuntu 24.04).
 
 ## What this gets you
 
-- Conda env `disckchungs` with CUDA 11.8 + GCC 11 + cuDNN 8.9 + cmake 3.31
+- Conda env `diskchungs` with CUDA 11.8 + GCC 11 + cuDNN 8.9 + cmake 3.31
 - libtorch 2.3.1+cu121 in `third_party/libtorch`
 - OpenCV 4.10 with CUDA in `third_party/install/opencv` (FFmpeg disabled)
 - TensorRT 8.6.1 (headers + libs) in `third_party/tensorrt`
@@ -36,8 +36,8 @@ git submodule update --init --recursive
 ## 2. Create the conda env
 
 ```bash
-conda env create -f env_disckchungs.yml
-conda activate disckchungs
+conda env create -f env_diskchungs.yml
+conda activate diskchungs
 # numpy 2.x breaks torch 2.3.1's ABI; pin to <2
 conda install -y 'numpy<2'
 pip install --extra-index-url https://download.pytorch.org/whl/cu121 \
@@ -46,11 +46,12 @@ pip install --extra-index-url https://download.pytorch.org/whl/cu121 \
     networkx==2.8.8 opencv-python==4.10.0.84
 ```
 
-The env's `etc/conda/activate.d/zz-disckchungs.sh` is the file the conda
+The env's `etc/conda/activate.d/zz-diskchungs.sh` is the file the conda
 hooks expect: it sets `CUDA_HOME`, `Torch_DIR`, `OpenCV_DIR`, `TENSORRT_ROOT`,
-and `LD_LIBRARY_PATH` so the build and the resulting binaries pick up the
-in-repo third-party trees. It hardcodes the repo location — adjust
-`DISCKCHUNGS_REPO=...` at the top if you cloned elsewhere.
+and `LD_LIBRARY_PATH` (including `$CONDA_PREFIX/lib` so the binaries find
+the env's CUDA / NPP / openblas at runtime) so the build and the resulting
+binaries pick up the in-repo third-party trees. It hardcodes the repo
+location — adjust `DISCKCHUNGS_REPO=...` at the top if you cloned elsewhere.
 
 ## 3. Download libtorch
 
@@ -130,7 +131,7 @@ Same invocations as the README, but skip the docker container. Make sure the
 env is active so the runtime `LD_LIBRARY_PATH` is set:
 
 ```bash
-conda activate disckchungs
+conda activate diskchungs
 bin/replica_rgbd \
     third_party/ORB-SLAM3/Vocabulary/ORBvoc.txt \
     cfg/ORB_SLAM3/RGB-D/Replica/office0.yaml \

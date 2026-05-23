@@ -1,4 +1,4 @@
-name: disckchungs
+name: diskchungs
 channels:
   - nvidia/label/cuda-11.8.0
   - conda-forge

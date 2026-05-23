@@ -1,10 +1,10 @@
 #!/bin/bash
 # Build OpenCV 4.10 with CUDA support into third_party/install/opencv.
-# Requires the disckchungs conda env to be activated.
+# Requires the diskchungs conda env to be activated.
 set -e
 
-if [ -z "$CONDA_PREFIX" ] || [ "$(basename "$CONDA_PREFIX")" != "disckchungs" ]; then
-    echo "ERROR: activate the disckchungs conda env first: conda activate disckchungs" >&2
+if [ -z "$CONDA_PREFIX" ] || [ "$(basename "$CONDA_PREFIX")" != "diskchungs" ]; then
+    echo "ERROR: activate the diskchungs conda env first: conda activate diskchungs" >&2
     exit 1
 fi
 
